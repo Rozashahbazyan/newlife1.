@@ -1,0 +1,9 @@
+<resources>
+    <string name="tvTitle">Title</string>
+    <string name="etHabitName">HabitName</string>
+    <string name="tvDays">Days</string>
+    <string name="daysContainer">Dayscontainer</string>
+    <item name="nav_facts" type="id"/>
+    <item name="nav_home1" type="id"/>
+    <item name="nav_statistics" type="id"/>
+</resources>
