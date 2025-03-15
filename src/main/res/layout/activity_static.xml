@@ -9,19 +9,20 @@
     tools:context=".Static">
 
     <!-- Увеличенный CalendarView -->
-
-    <!-- Нижняя панель навигации с увеличенным отступом -->
     <CalendarView
         android:id="@+id/calendarVie"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="16dp"
+        android:layout_alignStart="@+id/calendarVie"
+        android:layout_marginStart="0dp"
         android:backgroundTint="@color/white"
         android:clipToPadding="true"
         android:elevation="4dp"
         android:padding="8dp" />
+
+    <!-- TextView для отображения статистики -->
+
+    <!-- Нижняя панель навигации с увеличенным отступом -->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -29,10 +30,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="-1dp"
         android:backgroundTint="@color/beige_primary"
         app:itemIconTint="@color/bottom_nav_icon_tint"
         app:itemTextColor="@color/bottom_nav_text_color"
         app:menu="@menu/bottom_nav_menu" />
 
+    <TextView
+        android:id="@+id/tvStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tvStats"
+        android:layout_marginEnd="0dp"
+        android:text="Статистика:"
+        android:textSize="16sp" />
+
 </RelativeLayout>
+

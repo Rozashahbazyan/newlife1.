@@ -1,7 +1,3 @@
 <resources>
     <string name="app_name">newlife</string>
-    <string name="hj">Создать</string>
-    <string name="привычка">Новая привычка</string>
-    <string name="званиепри">Название привычки</string>
-    <string name="day">Выберите дни:</string>
 </resources>

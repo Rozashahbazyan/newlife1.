@@ -6,23 +6,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/beige_background"
-    tools:context=".home">
+    tools:context=".Home">
 
     <!-- Основное содержимое -->
-    <FrameLayout
-        android:id="@+id/container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewHabits"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:background="@color/beige_background">
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="118dp"
-            android:orientation="vertical" />
-    </FrameLayout>
-
-    <!-- Кнопка + (FloatingActionButton) в правом верхнем углу -->
+    <!-- Нижняя навигация -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_text_color"
+        app:backgroundTint="@color/white"
+        app:menu="@menu/bottom_nav_menu"/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonCreateHabit"
         android:layout_width="wrap_content"
@@ -34,36 +41,14 @@
         app:tint="@android:color/white"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <!-- Нижняя панель (BottomAppBar) -->
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
+    <ListView
+        android:id="@+id/listViewHabits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:backgroundTint="@color/beige_primary"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="20dp"
-        app:fabCradleVerticalOffset="10dp"
-        app:hideOnScroll="true" />
+        android:layout_marginTop="80dp"
+        android:padding="8dp"
+        android:background="@color/beige_primary"/>
 
-    <!-- Нижняя навигация (BottomNavigationView) -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:itemIconTint="@color/bottom_nav_icon_tint"
-        app:itemTextColor="@color/bottom_nav_text_color"
-        app:menu="@menu/bottom_nav_menu" />
-
-    <!-- RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp" /> <!-- Дополнительный марджин снизу -->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 

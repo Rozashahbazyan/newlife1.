@@ -1,16 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/baseline_home_24"
-        android:title="Главная"/>
-
-    <item
-        android:id="@+id/nav_facts"
-        android:icon="@drawable/ic_facts"
-        android:title="Интересные факты"/>
+        android:id="@+id/nav_home1"
+        android:icon="@drawable/ic_home"
+        android:title="Главное" />
 
     <item
         android:id="@+id/nav_statistics"
-        android:icon="@drawable/ic_statistics"
-        android:title="Статистика"/>
+        android:icon="@drawable/ic_stats"
+        android:title="Статистика" />
+
+    <item
+        android:id="@+id/nav_facts"
+        android:icon="@drawable/ic_fact"
+        android:title="Интересные факты" />
 </menu>
+

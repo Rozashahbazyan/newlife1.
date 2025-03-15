@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+        <solid android:color="@color/beige_primary"/>
+        <corners android:radius="24dp"/>
+        <elevation android:shadowColor="#000000" android:shadowDx="0" android:shadowDy="-3" android:shadowRadius="5"/>
+    </shape>
+
+</selector>
