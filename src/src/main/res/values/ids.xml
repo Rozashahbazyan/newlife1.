@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tvTitle" type="id" />
+    <item name="etHabitName" type="id" />
+    <item name="tvDays" type="id" />
+    <item name="daysContainer" type="id" />
+    <item name="cbMon" type="id" />
+    <item name="cbTue" type="id" />
+    <item name="cbWed" type="id" />
+    <item name="cbThu" type="id" />
+    <item name="cbFri" type="id" />
+    <item name="cbSat" type="id" />
+    <item name="cbSun" type="id" />
+    <item name="tvTime" type="id" />
+    <item name="btnPickTime" type="id" />
+    <item name="tvSelectedTime" type="id" />
+    <item name="btnCreateHabit" type="id" />
+    <item name="navigation_facts" type="id" />
+    <item name="tvSelectedDays" type="id" />
+    <item name="tvReminderTime" type="id" />
+    <item name="tvCompletionStats" type="id" />
+</resources>
