@@ -1,52 +1,46 @@
 package com.example.newlife;
-
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class EditHabitActivity extends AppCompatActivity {
-
-    private EditText habitNameEditText;
-    private CheckBox habitCheckBox;
-    private Button saveButton;
-    private int habitPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_habit);
 
-        habitNameEditText = findViewById(R.id.etHabitName);
-        habitCheckBox = findViewById(R.id.cbHabit);
-        saveButton = findViewById(R.id.btnSave);
+        String oldHabit = getIntent().getStringExtra("OLD_HABIT");
+        int position = getIntent().getIntExtra("POSITION", -1);
 
-        // Получаем переданные данные
-        Intent intent = getIntent();
-        String habitName = intent.getStringExtra("habit_name");
-        boolean isHabitCompleted = intent.getBooleanExtra("habit_status", false);
-        habitPosition = intent.getIntExtra("habit_position", -1);
+        EditText editText = findViewById(R.id.editHabitText);
+        Button saveButton = findViewById(R.id.saveButton);
 
-        // Заполняем поля данными
-        habitNameEditText.setText(habitName);
-        habitCheckBox.setChecked(isHabitCompleted);
+        editText.setText(oldHabit);
 
-        // Сохраняем изменения
         saveButton.setOnClickListener(v -> {
-            String updatedHabitName = habitNameEditText.getText().toString();
-            boolean updatedStatus = habitCheckBox.isChecked();
-
-            // Передаем обновленные данные обратно
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("updated_habit_name", updatedHabitName);
-            resultIntent.putExtra("updated_status", updatedStatus);
-            resultIntent.putExtra("habit_position", habitPosition);
-
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            String updatedHabit = editText.getText().toString();
+            if (!updatedHabit.isEmpty()) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("UPDATED_HABIT", updatedHabit);
+                resultIntent.putExtra("POSITION", position);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            } else {
+                Toast.makeText(this, "Введите название привычки", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

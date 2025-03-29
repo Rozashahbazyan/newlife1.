@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +18,30 @@
         android:theme="@style/Theme.NewLife"
         tools:targetApi="31">
         <activity
+            android:name=".DialogHabitOptions"
+            android:exported="false" />
+
+        <receiver
+            android:name=".MotivationalNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".HabitNotificationReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".NotificationReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
             android:name=".EditHabitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HabitOptionsActivity"
             android:exported="false" />
         <activity
             android:name=".HabitDetailActivity"
@@ -26,9 +54,6 @@
             android:exported="false" />
         <activity
             android:name=".Static"
-            android:exported="false" />
-        <activity
-            android:name=".tatic"
             android:exported="false" />
         <activity
             android:name=".Newsov"

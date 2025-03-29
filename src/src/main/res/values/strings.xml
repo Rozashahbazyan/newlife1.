@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">NewLife</string>
+    <string-array name="days_array">
+        <item>Понедельник</item>
+        <item>Вторник</item>
+        <item>Среда</item>
+        <item>Четверг</item>
+        <item>Пятница</item>
+        <item>Суббота</item>
+        <item>Воскресенье</item>
+    </string-array>
+    <string name="selected_time_format">Выбрано время: %1$02d:%2$02d</string>
 </resources>

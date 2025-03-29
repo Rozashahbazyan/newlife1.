@@ -56,14 +56,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <TextView
-        android:id="@+id/factTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Загрузка факта..."
-        android:textSize="18sp"
-        android:gravity="center"
-        android:padding="16dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

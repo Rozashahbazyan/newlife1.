@@ -1,83 +1,55 @@
 package com.example.newlife;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AlertDialog;
-
-import com.example.newlife.R;
-
-import java.util.HashSet;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.util.List;
-import java.util.Set;
 
-public class HabitAdapter extends ArrayAdapter<String> {
-    private List<String> habits;
+public class HabitAdapter extends ArrayAdapter<Habit> {
     private Context context;
-    private SharedPreferences preferences;
+    private List<Habit> habits;
+    private HabitViewModel habitViewModel;
 
-    public HabitAdapter(Context context, List<String> habits) {
-        super(context, R.layout.list_item_habit, habits);
+    public HabitAdapter(Context context, List<Habit> habits, HabitViewModel habitViewModel) {
+        super(context, R.layout.habit_item, habits);
         this.context = context;
         this.habits = habits;
-        preferences = context.getSharedPreferences("HabitPrefs", Context.MODE_PRIVATE);
+        this.habitViewModel = habitViewModel;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_habit, parent, false);
+            convertView = LayoutInflater.from(context)
+                    .inflate(R.layout.habit_item, parent, false);
         }
 
-        String habitName = habits.get(position);
+        // Получаем текущую привычку
+        Habit habit = habits.get(position);
 
-        TextView tvHabitName = convertView.findViewById(R.id.tvHabitName);
-        CheckBox cbHabitDone = convertView.findViewById(R.id.cbHabitDone);
-        ImageButton btnDeleteHabit = convertView.findViewById(R.id.btnDeleteHabit);
+        // Находим View элементы
+        TextView nameText = convertView.findViewById(R.id.habitNameText);
+        CheckBox checkBox = convertView.findViewById(R.id.habitCheckBox);
 
-        tvHabitName.setText(habitName);
+        // Устанавливаем значения
+        nameText.setText(habit.getName());
+        checkBox.setChecked(habit.isCompleted());
 
-        // Загружаем состояние CheckBox из SharedPreferences
-        boolean isChecked = preferences.getBoolean(habitName, false);
-        cbHabitDone.setChecked(isChecked);
-
-        // Обрабатываем изменение состояния CheckBox
-        cbHabitDone.setOnCheckedChangeListener((buttonView, isChecked1) -> {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(habitName, isChecked1);
-            editor.apply();
-        });
-
-        // Обрабатываем нажатие на кнопку удаления привычки
-        btnDeleteHabit.setOnClickListener(v -> {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Удалить привычку")
-                    .setMessage("Вы уверены, что хотите удалить привычку: " + habitName + "?")
-                    .setPositiveButton("Да", (dialog, which) -> {
-                        habits.remove(position);
-                        notifyDataSetChanged();
-                        saveHabits();
-                    })
-                    .setNegativeButton("Нет", null)
-                    .show();
+        // Обработчик изменения состояния чекбокса
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Обновляем статус привычки
+            habit.setCompleted(isChecked);
+            // Обновляем в базе данных через ViewModel
+            habitViewModel.update(habit);
         });
 
         return convertView;
-    }
-
-    // Сохранение изменений в SharedPreferences
-    private void saveHabits() {
-        SharedPreferences.Editor editor = preferences.edit();
-        Set<String> habitSet = new HashSet<>(habits);
-        editor.putStringSet("habit_list", habitSet);
-        editor.apply();
     }
 }

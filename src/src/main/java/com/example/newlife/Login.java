@@ -1,79 +1,108 @@
 package com.example.newlife;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
+    private static final String TAG = "LoginActivity";
     private FirebaseAuth mAuth;
     private EditText emailEditText, passwordEditText;
-    private Button loginButton;
-    private TextView registerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
+        try {
+            // Инициализация Firebase Auth
+            mAuth = FirebaseAuth.getInstance();
 
-        emailEditText = findViewById(R.id.emailEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        loginButton = findViewById(R.id.loginButton);
-        registerTextView = findViewById(R.id.registerTextView);
+            // Инициализация UI элементов
+            emailEditText = findViewById(R.id.emailEditText);
+            passwordEditText = findViewById(R.id.passwordEditText);
+            Button loginButton = findViewById(R.id.loginButton);
+            TextView registerTextView = findViewById(R.id.registerTextView);
 
-        loginButton.setOnClickListener(v -> {
+            // Проверка инициализации UI
+            if (emailEditText == null || passwordEditText == null ||
+                    loginButton == null || registerTextView == null) {
+                throw new IllegalStateException("Не найдены view элементы");
+            }
+
+            loginButton.setOnClickListener(v -> attemptLogin());
+
+            registerTextView.setOnClickListener(v -> {
+                startActivity(new Intent(Login.this, Register.class));
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "Ошибка инициализации", e);
+            Toast.makeText(this, "Ошибка инициализации приложения", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    private void attemptLogin() {
+        try {
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(Login.this, "Введите email и пароль", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                Toast.makeText(this, "Введите email и пароль", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             loginUser(email, password);
-        });
-
-        // Переход на экран регистрации
-        registerTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(Login.this, Register.class);
-            startActivity(intent);
-        });
+        } catch (Exception e) {
+            Log.e(TAG, "Ошибка при попытке входа", e);
+            Toast.makeText(this, "Неизвестная ошибка", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null && user.isEmailVerified()) {
-                            Toast.makeText(Login.this, "Вход выполнен", Toast.LENGTH_SHORT).show();
-                            Log.d("LoginActivity", "Вход выполнен: " + user.getEmail());
+                    try {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user == null) {
+                                Toast.makeText(this, "Ошибка: пользователь не найден", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                            Intent intent = new Intent(Login.this, Home.class);
-                            startActivity(intent);
+                            if (!user.isEmailVerified()) {
+                                Toast.makeText(this, "Подтвердите email перед входом", Toast.LENGTH_LONG).show();
+                                mAuth.signOut();
+                                return;
+                            }
+
+                            // Успешный вход
+                            Log.d(TAG, "Успешный вход: " + user.getEmail());
+                            startActivity(new Intent(this, Home.class));
                             finish();
                         } else {
-                            Toast.makeText(Login.this, "Подтвердите почту перед входом.", Toast.LENGTH_SHORT).show();
-                            FirebaseAuth.getInstance().signOut();
+                            // Обработка ошибок Firebase
+                            String errorMsg = "Ошибка входа";
+                            if (task.getException() != null) {
+                                errorMsg += ": " + task.getException().getMessage();
+                                Log.e(TAG, "Ошибка входа", task.getException());
+                            }
+                            Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(Login.this, "Ошибка входа: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Необработанная ошибка в колбэке", e);
+                        Toast.makeText(this, "Критическая ошибка", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
