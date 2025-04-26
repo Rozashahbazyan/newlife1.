@@ -1,4 +1,6 @@
 package com.example.newlife;
+
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,42 +13,26 @@ import java.util.List;
 
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonViewHolder> {
 
+    private Context context;
     private List<Person> personList;
-    private OnItemClickListener listener;
 
-    // Интерфейс для обработки кликов
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
-    public PersonAdapter(List<Person> personList) {
+    public PersonAdapter(Context context, List<Person> personList) {
+        this.context = context;
         this.personList = personList;
     }
 
-    // Метод для установки слушателя
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
+    @NonNull
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Создайте и верните ViewHolder
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.person_item, parent, false);
+    public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_person, parent, false);
         return new PersonViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PersonViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PersonViewHolder holder, int position) {
         Person person = personList.get(position);
         holder.nameTextView.setText(person.getName());
         holder.habitTextView.setText(person.getHabit());
-
-        // Устанавливаем слушатель кликов
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(position); // Передаем позицию в слушатель
-            }
-        });
     }
 
     @Override
@@ -54,16 +40,13 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.PersonView
         return personList.size();
     }
 
-    public class PersonViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView habitTextView;
+    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+        TextView nameTextView, habitTextView;
 
-        public PersonViewHolder(View itemView) {
+        public PersonViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             habitTextView = itemView.findViewById(R.id.habitTextView);
         }
     }
 }
-
-

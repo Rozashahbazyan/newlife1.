@@ -1,83 +1,106 @@
 package com.example.newlife;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashSet;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 
-public class HabitAdapter extends ArrayAdapter<String> {
-    private List<String> habits;
-    private Context context;
-    private SharedPreferences preferences;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
-    public HabitAdapter(Context context, List<String> habits) {
-        super(context, R.layout.list_item_habit, habits);
-        this.context = context;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHolder> {
+
+    private List<Habit> habits; // List of habits
+    private OnHabitClickListener listener; // Listener for habit interactions
+    private boolean showCheckbox; // Flag to control checkbox visibility
+
+    // Interface for handling habit click and checkbox interactions
+    public interface OnHabitClickListener {
+        void onHabitClick(int position);
+        void onHabitChecked(int position, boolean isChecked);
+    }
+
+    // Constructor to initialize adapter
+    public HabitAdapter(List<Habit> habits, OnHabitClickListener listener, boolean showCheckbox) {
         this.habits = habits;
-        preferences = context.getSharedPreferences("HabitPrefs", Context.MODE_PRIVATE);
+        this.listener = listener;
+        this.showCheckbox = showCheckbox;
+    }
+
+    @NonNull
+    @Override
+    public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_habit, parent, false);
+        return new HabitViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.list_item_habit, parent, false);
-        }
+    public void onBindViewHolder(@NonNull HabitViewHolder holder, int position) {
+        Habit habit = habits.get(position);
+        holder.habitNameTextView.setText(habit.getName());
+        holder.habitCheckBox.setChecked(habit.isCompleted()); // ВАЖНО!
 
-        String habitName = habits.get(position);
+        holder.habitCheckBox.setOnCheckedChangeListener(null); // Сначала убираем старый слушатель
 
-        TextView tvHabitName = convertView.findViewById(R.id.tvHabitName);
-        CheckBox cbHabitDone = convertView.findViewById(R.id.cbHabitDone);
-        ImageButton btnDeleteHabit = convertView.findViewById(R.id.btnDeleteHabit);
+        holder.habitCheckBox.setChecked(habit.isCompleted()); // Устанавливаем актуальное состояние
 
-        tvHabitName.setText(habitName);
-
-        // Загружаем состояние CheckBox из SharedPreferences
-        boolean isChecked = preferences.getBoolean(habitName, false);
-        cbHabitDone.setChecked(isChecked);
-
-        // Обрабатываем изменение состояния CheckBox
-        cbHabitDone.setOnCheckedChangeListener((buttonView, isChecked1) -> {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(habitName, isChecked1);
-            editor.apply();
+        holder.habitCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (listener != null) {
+                listener.onHabitChecked(position, isChecked);
+            }
         });
 
-        // Обрабатываем нажатие на кнопку удаления привычки
-        btnDeleteHabit.setOnClickListener(v -> {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Удалить привычку")
-                    .setMessage("Вы уверены, что хотите удалить привычку: " + habitName + "?")
-                    .setPositiveButton("Да", (dialog, which) -> {
-                        habits.remove(position);
-                        notifyDataSetChanged();
-                        saveHabits();
-                    })
-                    .setNegativeButton("Нет", null)
-                    .show();
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onHabitClick(position);
+            }
         });
-
-        return convertView;
     }
 
-    // Сохранение изменений в SharedPreferences
-    private void saveHabits() {
-        SharedPreferences.Editor editor = preferences.edit();
-        Set<String> habitSet = new HashSet<>(habits);
-        editor.putStringSet("habit_list", habitSet);
-        editor.apply();
+
+    @Override
+    public int getItemCount() {
+        return habits.size();
+    }
+
+    // Update the list of habits and notify the adapter
+    public void updateHabits(List<Habit> newHabits) {
+        this.habits = newHabits;
+        notifyDataSetChanged();
+    }
+
+    // ViewHolder class to represent each habit item
+    static class HabitViewHolder extends RecyclerView.ViewHolder {
+        TextView habitNameTextView;
+        TextView habitTimeTextView;
+        CheckBox habitCheckBox;
+
+        public HabitViewHolder(@NonNull View itemView) {
+            super(itemView);
+            habitNameTextView = itemView.findViewById(R.id.habitNameTextView);
+            habitTimeTextView = itemView.findViewById(R.id.habitTimeTextView);
+            habitCheckBox = itemView.findViewById(R.id.habitCheckBox);
+        }
     }
 }
-
-

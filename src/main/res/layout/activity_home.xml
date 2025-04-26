@@ -1,54 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/beige_background"
-    tools:context=".Home">
+    android:layout_height="match_parent">
 
-    <!-- Основное содержимое -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewHabits"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:paddingHorizontal="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Habit Tracker"
+        app:titleTextColor="@android:color/white">
 
-    <!-- Нижняя навигация -->
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/habitsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/bottomNavigationView"
+        android:padding="16dp"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/bottom_nav_icon_tint"
-        app:itemTextColor="@color/bottom_nav_text_color"
-        app:backgroundTint="@color/white"
-        app:menu="@menu/bottom_nav_menu"/>
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_menu"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/buttonCreateHabit"
+        android:id="@+id/addHabitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:backgroundTint="@color/beige_primary"
-        app:tint="@android:color/white"
-        app:srcCompat="@android:drawable/ic_input_add" />
-
-    <ListView
-        android:id="@+id/listViewHabits"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:padding="8dp"
-        android:background="@color/beige_primary"/>
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
-
+        android:layout_above="@id/bottomNavigationView"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:contentDescription="Add a new habit"/>
+</RelativeLayout>

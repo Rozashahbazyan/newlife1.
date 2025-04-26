@@ -11,5 +11,5 @@
     <color name="beige_primary">#D2B48C</color>
     <color name="bottom_nav_icon_tint">#8D6E63</color>
     <color name="bottom_nav_text_color">#5D4037</color>
-
+    <color name="colorPrimary">#3F51B5</color>
 </resources>
